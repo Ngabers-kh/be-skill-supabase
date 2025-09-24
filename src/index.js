@@ -18,6 +18,9 @@ app.use('/assets', express.static('public/images'));
 
 // Routes
 app.use('/users', userRoutes);
+app.use('/skills', require('./routes/skills.js'));
+
+// Upload endpoint  
 
 app.post('/upload', upload.single('photo'), (req, res) => {
   res.json({

@@ -7,19 +7,32 @@ const getAllUser = async () => {
     return data;
 }
 
-// Create new user
+const bcrypt = require("bcrypt");
+
 const createNewUser = async (body) => {
-    const { data, error } = await supabase.from('users').insert([{
-        name: body.name,
-        email: body.email,
-        address: body.address,
-        role: 'user',
-        job: body.job,
-        password: body.password,
-    }]);
-    if (error) throw new Error(error.message, '500');
-    return data;
-}
+    // Hash password dulu
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(body.password, salt);
+
+    const { data, error } = await supabase
+        .from("users")
+        .insert([
+            {
+                name: body.name,
+                email: body.email,
+                address: body.address,
+                role: "user",
+                job: body.job,
+                password: hashedPassword, // simpan hash, bukan plain text
+            },
+        ])
+        .select(); // biar langsung return data user yg baru dibuat
+
+    if (error) throw new Error(error.message);
+
+    return data[0]; // biasanya Supabase return array
+};
+
 
 // Update user
 const updateUser = async (body, idUser) => {
@@ -55,15 +68,65 @@ const getUserByEmail = async (email) => {
         .from('users')
         .select('*')
         .eq('email', email)
-        .single(); // hanya ambil satu user
-    if (error) throw new Error(error.message);
-    return data;
+        .single(); // Hanya ambil satu user
+
+    if (error) {
+        // Menangani error dengan lebih baik
+        console.error("Error fetching user:", error);
+        throw new Error(error.message);
+    }
+
+    // Memastikan data yang dikembalikan adalah objek yang valid
+    if (!data) {
+        throw new Error("User not found");
+    }
+
+    return data; // Mengembalikan data user
+};
+
+const addSkillsToUser = async (idUser, skillIds) => {
+  const records = skillIds.map((skillId) => ({
+    idUser,
+    idSkill: skillId,
+  }));
+
+  const { data, error } = await supabase.from("userSkill").insert(records);
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+
+// Get skills of a user
+const getSkillsOfUser = async (idUser) => {
+    // Ambil skill ID dari userSkill
+    const { data: userSkills, error: userSkillsError } = await supabase
+        .from('userSkill')
+        .select('idSkill')
+        .eq('idUser', idUser);
+
+    if (userSkillsError) throw new Error(userSkillsError.message);
+
+    // Ambil nameSkill dari skills berdasarkan skill ID yang didapat
+    const skillIds = userSkills.map(skill => skill.idSkill);
+    const { data: skills, error: skillsError } = await supabase
+        .from('skills')
+        .select('nameSkill')
+        .in('idSkill', skillIds);
+
+    if (skillsError) throw new Error(skillsError.message);
+
+    return skills;
 }
+
+
 
 module.exports = {
     createNewUser,
     getAllUser,
     updateUser,
     deleteUser,
-    getUserByEmail, // tambahkan ini
+    getUserByEmail,
+    addSkillsToUser,
+    getSkillsOfUser,
 }

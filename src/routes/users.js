@@ -18,4 +18,8 @@ router.patch('/:idUser', UserController.updateUser);
 // Delete 
 router.delete('/:idUser', UserController.deleteUser);
 
+// skill relasi
+router.post("/:idUser/skills", UserController.addSkillsUser);
+router.get("/:idUser/skills", UserController.getSkillsOfUser);
+
 module.exports = router;
