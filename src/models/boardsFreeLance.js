@@ -1,23 +1,22 @@
 const supabase = require('../config/database');
 
-const getAllBoardsLearning= async () => {
-    const { data, error } = await supabase.from('boardLearning').select('*');
+const getAllBoardsFreeLance= async () => {
+    const { data, error } = await supabase.from('boardFreeLance').select('*');
     if (error) throw new Error(error.message);
     return data;
 }
 
 const createNewBoard = async (body) => {
-
     const { data, error } = await supabase
-        .from("boardLearning")
+        .from("boardFreeLance")
         .insert([
             {
                 title: body.title,
                 description: body.description,
                 price: body.price,
-                date: body.date,
-                startTime: body.startTime,
-                endTime: body.endTime,
+                startDate: body.startDate,
+                endDate: body.endDate,
+                quota: body.quota,
                 skills: body.skills,
                 status: "Show",
                 "idUser": body.idUser
@@ -31,38 +30,38 @@ const createNewBoard = async (body) => {
 };
 
 // Update Board
-const updateBoardLearning = async (body, idBoardLearning) => {
+const updateBoardFreeLance= async (body, idBoardFreeLance) => {
     const { data, error } = await supabase
-        .from('boardLearning')
+        .from('boardFreeLance')
         .update({
             title: body.title,
             description: body.description,
             price: body.price,
-            date: body.date,
-            startTime: body.startTime,
-            endTime: body.endTime,
+            startDate: body.startDate,
+            endDate: body.endDate,
+            quota: body.quota,
             skills: body.skills,
             status: body.status,
-            "idUser": body.idUser,
+            "idUser": body.idUser
         })
-        .eq('id', idBoardLearning);
+        .eq('id', idBoardFreeLance);
     if (error) throw new Error(error.message);
     return data;
 }
 
-// Delete Board
-const deleteBoardLearning = async (idBoardLearning) => {
+// Delete user
+const deleteBoardFreeLance = async (idBoardFreeLance) => {
     const { data, error } = await supabase
-        .from('boardLearning')
+        .from('boardFreeLance')
         .delete()
-        .eq('id', idBoardLearning);
+        .eq('id', idBoardFreeLance);
     if (error) throw new Error(error.message);
     return data;
 }
 
 module.exports = {
-    getAllBoardsLearning,
+    getAllBoardsFreeLance,
     createNewBoard,
-    updateBoardLearning,
-    deleteBoardLearning
+    updateBoardFreeLance,
+    deleteBoardFreeLance
 }

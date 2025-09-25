@@ -4,6 +4,7 @@ const express = require('express');
 const userRoutes = require('./routes/users.js');
 const skillRoutes = require('./routes/skills.js');
 const boardLeraningRoutes = require('./routes/boardsLearning.js');
+const boardFreeLanceRoutes = require('./routes/boardsFreeLance.js');
 const middlewareLogRequest = require('./middleware/log.js');
 const upload = require('./middleware/multer.js');
 const cors = require('cors');
@@ -22,6 +23,7 @@ app.use('/assets', express.static('public/images'));
 app.use('/users', userRoutes);
 app.use('/skills', skillRoutes);
 app.use('/boardsLearning', boardLeraningRoutes);
+app.use('/boardsFreeLance', boardFreeLanceRoutes);
 
 // Upload endpoint  
 

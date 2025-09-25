@@ -12,8 +12,8 @@ class BoardLearningController {
 
   static async createNewBoard(req, res) {
       try {
-        const { title, description, price, date, startTime, endTime, skills, status } = req.body;
-        const user = await BoardLearningModel.createNewBoard({ title, description, price, date, startTime, endTime, skills, status });
+        const { title, description, price, date, startTime, endTime, skills, status, idUser } = req.body;
+        const user = await BoardLearningModel.createNewBoard({ title, description, price, date, startTime, endTime, skills, status, idUser });
         res.json(user);
       } catch (err) {
         res.status(500).json({ message: err.message });
@@ -33,8 +33,14 @@ class BoardLearningController {
   static async deleteBoardLearning(req, res) {
       try {
         const { idBoardLearning } = req.params;
-        await BoardLearningModel.deleteBoardLearning(idBoardLearning);
-        res.json({ message: "Board Deleted" });
+        const data = await BoardLearningModel.deleteBoardLearning(idBoardLearning);
+        if (!data || data.length === 0) {
+        throw new Error("BoardLearning not found");
+        }
+        res.json({
+            message: "BoardLearning deleted successfully",
+            data,
+        });
       } catch (err) {
         res.status(500).json({ message: err.message });
       }
