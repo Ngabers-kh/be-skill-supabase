@@ -1,10 +1,50 @@
 const supabase = require('../config/database');
 
-const getAllBoardsLearning= async () => {
-    const { data, error } = await supabase.from('boardLearning').select('id, title, description, price, date, startTime, endTime, skills, status, name: users(name), idUser');
-    if (error) throw new Error(error.message);
-    return data;
-}
+const getAllBoardsLearning = async () => {
+  const { data: boards, error } = await supabase
+    .from("boardLearning")
+    .select(`
+      id,
+      title,
+      description,
+      price,
+      date,
+      startTime,
+      endTime,
+      status,
+      users(name)
+    `);
+
+  if (error) throw new Error(error.message);
+
+  // untuk setiap board, ambil skills
+  for (const board of boards) {
+    const { data: boardSkills, error: boardSkillsError } = await supabase
+      .from("boardLearningSkill")
+      .select("idSkill")
+      .eq("idBoardLearning", board.id);
+
+    if (boardSkillsError) throw new Error(boardSkillsError.message);
+
+    const skillIds = boardSkills.map((s) => s.idSkill);
+
+    if (skillIds.length > 0) {
+      const { data: skills, error: skillsError } = await supabase
+        .from("skills")
+        .select("idSkill, nameSkill")
+        .in("idSkill", skillIds);
+
+      if (skillsError) throw new Error(skillsError.message);
+
+      board.skills = skills.map((s) => s.nameSkill); // tambahin ke board
+    } else {
+      board.skills = [];
+    }
+  }
+
+  return boards;
+};
+
 
 // Create Board
 const createNewBoard = async (body) => {
