@@ -8,6 +8,7 @@ const getAllUser = async () => {
 }
 
 const bcrypt = require("bcrypt");
+const { get } = require('../routes/users');
 
 const createNewUser = async (body) => {
     // Hash password dulu
@@ -84,6 +85,28 @@ const getUserByEmail = async (email) => {
     return data; // Mengembalikan data user
 };
 
+// Get user by id
+const getUserById = async (id) => {
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('idUser', id)
+        .single(); // Hanya ambil satu user
+
+    if (error) {
+        // Menangani error dengan lebih baik
+        console.error("Error fetching user:", error);
+        throw new Error(error.message);
+    }
+
+    // Memastikan data yang dikembalikan adalah objek yang valid
+    if (!data) {
+        throw new Error("User not found");
+    }
+
+    return data; // Mengembalikan data user
+};
+
 const addSkillsToUser = async (idUser, skillIds) => {
   const records = skillIds.map((skillId) => ({
     idUser,
@@ -111,7 +134,7 @@ const getSkillsOfUser = async (idUser) => {
     const skillIds = userSkills.map(skill => skill.idSkill);
     const { data: skills, error: skillsError } = await supabase
         .from('skills')
-        .select('nameSkill')
+        .select('idSkill, nameSkill')
         .in('idSkill', skillIds);
 
     if (skillsError) throw new Error(skillsError.message);
@@ -129,4 +152,5 @@ module.exports = {
     getUserByEmail,
     addSkillsToUser,
     getSkillsOfUser,
+    getUserById,
 }

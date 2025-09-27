@@ -55,6 +55,17 @@ class UserController {
     }
   }
 
+  // Get all users
+  static async getUser(req, res) {
+    try {
+      const { idUser } = req.params;
+      const users = await UserModel.getUserById(idUser);
+      res.json(users);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  }
+
   // Update
   static async updateUser(req, res) {
     try {

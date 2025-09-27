@@ -12,6 +12,9 @@ router.post('/login', UserController.loginUser);
 // Read - Get
 router.get('/', UserController.getAllUser);
 
+// Read - Get
+router.get('/:idUser', UserController.getUser);
+
 // Update - Patch
 router.patch('/:idUser', UserController.updateUser);
 

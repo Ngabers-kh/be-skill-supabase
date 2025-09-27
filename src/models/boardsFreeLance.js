@@ -7,7 +7,7 @@ const getAllBoardsFreeLance= async () => {
 }
 
 const createNewBoard = async (body) => {
-    const { data, error } = await supabase
+  const { data: boardData, error: boardError } = await supabase
         .from("boardFreeLance")
         .insert([
             {
@@ -17,16 +17,30 @@ const createNewBoard = async (body) => {
                 startDate: body.startDate,
                 endDate: body.endDate,
                 quota: body.quota,
-                skills: body.skills,
-                status: "Show",
-                "idUser": body.idUser
+                status: "open",
+                idUser: body.idUser
             },
         ])
         .select(); 
 
-    if (error) throw new Error(error.message);
+    if (boardError) throw new Error(boardError.message);
 
-    return data[0]; 
+  const newBoard = boardData[0];
+
+  if (body.skills && body.skills.length > 0) {
+    const skillRows = body.skills.map((idSkill) => ({
+      idBoardFreeLance: newBoard.id,
+      idSkill: idSkill,
+    }));
+
+    const { error: skillError } = await supabase
+      .from("boardFreeLanceSkill")
+      .insert(skillRows);
+
+    if (skillError) throw new Error(skillError.message);
+  }
+
+  return newBoard;
 };
 
 // Update Board
