@@ -3,6 +3,8 @@ const BoardFreeLanceController = require("../controller/boardFreeLance.js");
 const router = express.Router();
 
 router.get("/", BoardFreeLanceController.getAllBoards);
+router.get("/:idUser", BoardFreeLanceController.getAllBoardsByUser);
+router.get("/board/:idBoard", BoardFreeLanceController.getBoardsById);
 
 // // Create - Post
 router.post('/create', BoardFreeLanceController.createNewBoard);

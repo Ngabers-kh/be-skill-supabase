@@ -34,9 +34,6 @@ class BoardLearningController {
       try {
         const { idBoardLearning } = req.params;
         const data = await BoardLearningModel.deleteBoardLearning(idBoardLearning);
-        if (!data || data.length === 0) {
-        throw new Error("BoardLearning not found");
-        }
         res.json({
             message: "BoardLearning deleted successfully",
             data,
@@ -45,6 +42,17 @@ class BoardLearningController {
         res.status(500).json({ message: err.message });
       }
     }
+
+    static async getAllBoardsByUser(req, res) {
+      try {
+        const { idUser } = req.params;
+        const boards = await BoardLearningModel.getAllBoardsLearningByUser(idUser);
+        res.json(boards);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+    }
+
 }
 
 module.exports = BoardLearningController;

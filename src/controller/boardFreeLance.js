@@ -34,9 +34,6 @@ class BoardFreeLanceController {
       try {
         const { idBoardFreeLance } = req.params;
         const data = await BoardFreeLanceModel.deleteBoardFreeLance(idBoardFreeLance);
-        if (!data || data.length === 0) {
-        throw new Error("BoardFreeLance not found");
-        }
         res.json({
             message: "BoardFreeLance deleted successfully",
             data,
@@ -45,6 +42,26 @@ class BoardFreeLanceController {
         res.status(500).json({ message: err.message });
       }
     }
+
+  static async getAllBoardsByUser(req, res) {
+      try {
+        const { idUser } = req.params;
+        const boards = await BoardFreeLanceModel.getAllBoardsFreeLanceByUserId(idUser);
+        res.json(boards);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+  }
+
+  static async getBoardsById(req, res) {
+      try {
+        const { idBoard } = req.params;
+        const boards = await BoardFreeLanceModel.getBoardsFreeLanceById(idBoard);
+        res.json(boards);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+  }
 }
 
 module.exports = BoardFreeLanceController;

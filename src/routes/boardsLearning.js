@@ -3,6 +3,8 @@ const BoardController = require("../controller/boardsLearning.js");
 const router = express.Router();
 
 router.get("/", BoardController.getAllBoards);
+router.get("/:idUser", BoardController.getAllBoardsByUser);
+router.get("/board/:idBoard", BoardController.getAllBoardsByUser);
 
 // // Create - Post
 router.post('/create', BoardController.createNewBoard);
