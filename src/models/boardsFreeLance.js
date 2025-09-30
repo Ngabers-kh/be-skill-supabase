@@ -122,7 +122,6 @@ const getAllBoardsFreeLanceByUserId = async ( idUser ) => {
 
   if (error) throw new Error(error.message);
 
-  // untuk setiap board, ambil skills
   for (const board of boards) {
     const { data: boardSkills, error: boardSkillsError } = await supabase
       .from("boardFreeLanceSkill")
@@ -169,7 +168,6 @@ const getBoardsFreeLanceById = async (idBoard) => {
     throw new Error(error.message);
   }
 
-  // Check if any board was found
   if (boards.length === 0) {
     throw new Error(`No board found with id: ${idBoard}`);
   }

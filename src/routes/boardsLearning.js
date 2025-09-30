@@ -4,7 +4,8 @@ const router = express.Router();
 
 router.get("/", BoardController.getAllBoards);
 router.get("/:idUser", BoardController.getAllBoardsByUser);
-router.get("/board/:idBoard", BoardController.getAllBoardsByUser);
+router.get("/board/:idBoard", BoardController.getBoardsById);
+router.get("/skills/:idBoard", BoardController.getSkillsOfBoard);
 
 // // Create - Post
 router.post('/create', BoardController.createNewBoard);

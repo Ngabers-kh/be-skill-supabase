@@ -53,6 +53,25 @@ class BoardLearningController {
       }
     }
 
+    static async getBoardsById(req, res) {
+          try {
+            const { idBoard } = req.params;
+            const boards = await BoardLearningModel.getBoardLearningById(idBoard);
+            res.json(boards);
+          } catch (err) {
+            res.status(500).json({ message: err.message });
+          }
+    }
+
+    static async getSkillsOfBoard(req, res) {
+          try {
+            const { idBoard } = req.params;
+            const skills = await BoardLearningModel.getSkillsOfBoard(idBoard);
+            res.json(skills);
+          } catch (err) {
+            res.status(500).json({ message: err.message });
+          }
+    }
 }
 
 module.exports = BoardLearningController;
