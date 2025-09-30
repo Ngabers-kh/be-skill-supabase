@@ -5,6 +5,7 @@ const router = express.Router();
 router.get("/", BoardFreeLanceController.getAllBoards);
 router.get("/:idUser", BoardFreeLanceController.getAllBoardsByUser);
 router.get("/board/:idBoard", BoardFreeLanceController.getBoardsById);
+router.get("/skills/:idBoard", BoardFreeLanceController.getSkillsOfBoard);
 
 // // Create - Post
 router.post('/create', BoardFreeLanceController.createNewBoard);

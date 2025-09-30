@@ -62,6 +62,16 @@ class BoardFreeLanceController {
         res.status(500).json({ message: err.message });
       }
   }
+
+  static async getSkillsOfBoard(req, res) {
+      try {
+        const { idBoard } = req.params;
+        const skills = await BoardFreeLanceModel.getSkillsOfBoard(idBoard);
+        res.json(skills);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+    }
 }
 
 module.exports = BoardFreeLanceController;
