@@ -12,9 +12,8 @@ const getAllBoardsFreeLance = async () => {
       quota,
       startDate,
       endDate,
-      status,
-      users(name)
-    `);
+      users(name)`)
+      .eq("status", "open");
 
   if (error) throw new Error(error.message);
 

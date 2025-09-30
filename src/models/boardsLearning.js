@@ -12,8 +12,8 @@ const getAllBoardsLearning = async () => {
       startTime,
       endTime,
       status,
-      users(name)
-    `);
+      users(name)`)
+    .eq("status", "open");
 
   if (error) throw new Error(error.message);
 
@@ -187,7 +187,6 @@ const updateBoardLearning = async (body, idBoardLearning) => {
             date: body.date,
             startTime: body.startTime,
             endTime: body.endTime,
-            skills: body.skills,
             status: body.status,
             idUser: body.idUser,
         })
