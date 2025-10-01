@@ -160,7 +160,8 @@ const getBoardLearningById = async (idBoard) => {
       date,
       startTime,
       endTime,
-      status
+      status,
+      users(name)
     `)
     .eq("id", idBoard);
 

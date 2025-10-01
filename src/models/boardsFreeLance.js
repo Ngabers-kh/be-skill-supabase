@@ -13,7 +13,7 @@ const getAllBoardsFreeLance = async () => {
       startDate,
       endDate,
       users(name)`)
-      .eq("status", "open");
+    .eq("status", "open");
 
   if (error) throw new Error(error.message);
 
@@ -81,8 +81,6 @@ const createNewBoard = async (body) => {
 
   return newBoard;
 };
-
-
 
 // Delete Board
 const deleteBoardFreeLance = async (idBoardFreeLance) => {
@@ -158,7 +156,8 @@ const getBoardsFreeLanceById = async (idBoard) => {
       quota,
       startDate,
       endDate,
-      status
+      status,
+      users(name)
     `)
     .eq("id", idBoard);
 
