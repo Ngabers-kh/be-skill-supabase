@@ -48,6 +48,32 @@ class BoardApplicationsController {
             return res.status(500).json({ message: err.message });
         }
     }
+
+  // GET all freelance applications by userId
+    static async getAllAplicationFreeLanceByUser(req, res) {
+    try {
+      const { idUser } = req.params; // pastikan route pakai :idUser
+
+      const applications = await ApplicationModel.getAllAplicationFreeLanceByUserId(idUser);
+      res.status(200).json(applications);
+    } catch (err) {
+      console.error("Error getAllAplicationFreeLanceByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  static async getAllAplicationLearningByUser(req, res) {
+    try {
+      const { idUser } = req.params; // pastikan route pakai :idUser
+
+      const applications = await ApplicationModel.getAllAplicationLearningByUserId(idUser);
+      res.status(200).json(applications);
+    } catch (err) {
+      console.error("Error getAllAplicationLearningByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
 }
 
 module.exports = BoardApplicationsController;
