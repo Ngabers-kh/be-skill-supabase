@@ -7,4 +7,9 @@ const router = express.Router();
 router.post('/learning', BoardApplicationsController.createBoardApplicationLearning);
 router.post('/learning/search', BoardApplicationsController.getIdUserBoardApplicationLearning);
 
+// create board application FreeLance
+router.post('/freelance', BoardApplicationsController.createBoardApplicationFreeLance);
+router.post('/freelance/search', BoardApplicationsController.getIdUserBoardApplicationFreeLance);
+
+
 module.exports = router;

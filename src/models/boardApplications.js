@@ -47,8 +47,10 @@ const createBoardApplicationFreelance = async (body) => {
         {
             idBoardFreeLance: body.idBoardFreeLance,
             idUser: body.idUser,
+            idUserCreated: body.idUserCreated,
+            message: body.message,
+            subject: body.subject,
             status: "pending",
-            category: "freeLance",
         }
     ])
     .select();
@@ -57,8 +59,29 @@ const createBoardApplicationFreelance = async (body) => {
     return data[0];
 };
 
+// get idUser dan id BoardFreeLance
+const getIdUserIdBoardFreeLance = async (body) => {
+  const { idUser, idBoardFreeLance } = body;
+
+  const { data, error } = await supabase
+    .from("boardFreeLanceApplications")
+    .select("id")
+    .eq("idUser", idUser)
+    .eq("idBoardFreeLance", idBoardFreeLance)
+    .limit(1);
+
+  if (error) {
+    console.error("Supabase error:", error.message);
+    throw error;
+  }
+
+  return data && data.length > 0; // true kalau ada, false kalau tidak
+};
+
 
 module.exports = {
     createBoardApplicationLearning,
-    getIdUserIdBoardLearning
+    getIdUserIdBoardLearning,
+    createBoardApplicationFreelance,
+    getIdUserIdBoardFreeLance
 };
