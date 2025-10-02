@@ -196,9 +196,101 @@ const getAllAplicationLearningByUserId = async (idUser) => {
   return applications;
 };
 
+const getMessageFreeLanceApplications = async (idUser) => {
+  const { data, error } = await supabase
+    .from("boardFreeLanceApplications")
+    .select(`
+      id,
+      message,
+      subject,
+      status,
+      created_at,
+      boardFreeLance (
+        id,
+        title,
+        description,
+        users ( name )
+      )
+    `)
+    .eq("idUserCreated", idUser);
 
+  if (error) throw new Error(error.message);
 
+  return data.map((app) => ({
+    id: app.id,
+    message: app.message,
+    subject: app.subject,
+    status: app.status,
+    created_at: app.created_at,
+    boardTitle: app.boardFreeLance?.title || null,
+    boardDescription: app.boardFreeLance?.description || null,
+    organizer: app.boardFreeLance?.users?.name || null,
+  }));
+};
 
+const getMessageLearningApplications = async (idUser) => {
+  const { data, error } = await supabase
+    .from("boardLearningApplications")
+    .select(`
+      id,
+      totalAmount,
+      paymentStatus,
+      created_at,
+      boardLearning (
+        id,
+        title,
+        description,
+        link,
+        users ( name )
+      )
+    `)
+    .eq("idUser", idUser); // filter berdasarkan user yang apply
+
+  if (error) throw new Error(error.message);
+
+  return data.map((app) => ({
+    id: app.id,
+    totalAmount: app.totalAmount,
+    paymentStatus: app.paymentStatus,
+    created_at: app.created_at,
+    boardTitle: app.boardLearning?.title || null,
+    boardDescription: app.boardLearning?.description || null,
+    link: app.boardLearning?.link || null,
+    organizer: app.boardLearning?.users?.name || null,
+  }));
+};
+
+const getMessageLearningApplicationsbyId = async (id) => {
+  const { data, error } = await supabase
+    .from("boardLearningApplications")
+    .select(`
+      id,
+      totalAmount,
+      paymentStatus,
+      created_at,
+      boardLearning (
+        id,
+        title,
+        description,
+        link,
+        users ( name )
+      )
+    `)
+    .eq("id", id); // filter berdasarkan user yang apply
+
+  if (error) throw new Error(error.message);
+
+  return data.map((app) => ({
+    id: app.id,
+    totalAmount: app.totalAmount,
+    paymentStatus: app.paymentStatus,
+    created_at: app.created_at,
+    boardTitle: app.boardLearning?.title || null,
+    boardDescription: app.boardLearning?.description || null,
+    link: app.boardLearning?.link || null,
+    organizer: app.boardLearning?.users?.name || null,
+  }));
+};
 
 
 module.exports = {
@@ -207,5 +299,8 @@ module.exports = {
     createBoardApplicationFreelance,
     getIdUserIdBoardFreeLance,
     getAllAplicationFreeLanceByUserId,
-    getAllAplicationLearningByUserId
+    getAllAplicationLearningByUserId,
+    getMessageFreeLanceApplications,
+    getMessageLearningApplications,
+    getMessageLearningApplicationsbyId
 };

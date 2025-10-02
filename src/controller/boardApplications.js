@@ -74,6 +74,39 @@ class BoardApplicationsController {
     }
   }
 
+  static async getAllMessageFreeLanceByUser(req, res) {
+    try {
+      const { idUser } = req.params; // pastikan route pakai :idUser
+      const message = await ApplicationModel.getMessageFreeLanceApplications(idUser);
+      res.status(200).json(message);
+    } catch (err) {
+      console.error("Error getAllAplicationLearningByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  static async getAllMessageLearningByUser(req, res) {
+    try {
+      const { idUser } = req.params; // pastikan route pakai :idUser
+      const message = await ApplicationModel.getMessageLearningApplications(idUser);
+      res.status(200).json(message);
+    } catch (err) {
+      console.error("Error getAllAplicationLearningByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  static async getMessageLearningById(req, res) {
+    try {
+      const { id } = req.params; // pastikan route pakai :idUser
+      const message = await ApplicationModel.getMessageLearningApplicationsbyId(id);
+      res.status(200).json(message);
+    } catch (err) {
+      console.error("Error getAllAplicationLearningByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
 }
 
 module.exports = BoardApplicationsController;
