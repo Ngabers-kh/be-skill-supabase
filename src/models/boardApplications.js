@@ -3,13 +3,14 @@ const supabase = require('../config/database');
 // create board application for learning
 const createBoardApplicationLearning = async (body) => {
   const { data, error } = await supabase
-    .from("boardlearningApplications")
+    .from("boardLearningApplications")
     .insert([
         {
             idBoardLearning: body.idBoardLearning,
+            idTransaction: body.idTransaction,
             idUser: body.idUser,
-            status: "pending",
-            category: "learning",
+            totalAmount: body.totalAmount,
+            paymentStatus: "Success",
         }
     ])
     .select();
@@ -17,6 +18,26 @@ const createBoardApplicationLearning = async (body) => {
     if (error) throw new Error(error.message);
     return data[0];
 };
+
+// get idUser dan id BoardLearning
+const getIdUserIdBoardLearning = async (body) => {
+  const { idUser, idBoardLearning } = body;
+
+  const { data, error } = await supabase
+    .from("boardLearningApplications")
+    .select("id")
+    .eq("idUser", idUser)
+    .eq("idBoardLearning", idBoardLearning)
+    .limit(1);
+
+  if (error) {
+    console.error("Supabase error:", error.message);
+    throw error;
+  }
+
+  return data && data.length > 0; // true kalau ada, false kalau tidak
+};
+
 
 // create board applications for freelance
 const createBoardApplicationFreelance = async (body) => {
@@ -39,4 +60,5 @@ const createBoardApplicationFreelance = async (body) => {
 
 module.exports = {
     createBoardApplicationLearning,
+    getIdUserIdBoardLearning
 };
