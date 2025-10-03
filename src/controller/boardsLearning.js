@@ -12,8 +12,8 @@ class BoardLearningController {
 
   static async createNewBoard(req, res) {
       try {
-        const { title, description, price, date, startTime, endTime, skills, status, idUser } = req.body;
-        const user = await BoardLearningModel.createNewBoard({ title, description, price, date, startTime, endTime, skills, status, idUser });
+        const { title, description, price, date, startTime, endTime, skills, status, idUser, link } = req.body;
+        const user = await BoardLearningModel.createNewBoard({ title, description, price, date, startTime, endTime, skills, status, idUser, link });
         res.json(user);
       } catch (err) {
         res.status(500).json({ message: err.message });

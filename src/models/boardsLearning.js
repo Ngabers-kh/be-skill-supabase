@@ -61,6 +61,7 @@ const createNewBoard = async (body) => {
         endTime: body.endTime,
         status: "open",
         idUser: body.idUser,
+        link: body.link
       },
     ])
     .select();
@@ -162,7 +163,8 @@ const getBoardLearningById = async (idBoard) => {
       startTime,
       endTime,
       status,
-      users(name)
+      users(name),
+      link
     `)
     .eq("id", idBoard);
 
@@ -191,6 +193,7 @@ const updateBoardLearning = async (body, idBoardLearning) => {
             endTime: body.endTime,
             status: body.status,
             idUser: body.idUser,
+            link: body.link
         })
         .eq('id', idBoardLearning);
     if (error) throw new Error(error.message);
