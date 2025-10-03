@@ -36,22 +36,56 @@ const createNewUser = async (body) => {
 
 
 // Update user
+// Update User + Skills
 const updateUser = async (body, idUser) => {
-    const { data, error } = await supabase
-        .from('users')
-        .update({
-            name: body.name,
-            email: body.email,
-            address: body.address,
-            role: 'user',
-            job: body.job,
-            password: body.password,
-            bio: body.bio,
-        })
-        .eq('idUser', idUser);
-    if (error) throw new Error(error.message);
-    return data;
-}
+  // === Update data user ===
+  const { data, error } = await supabase
+    .from("users")
+    .update({
+      name: body.name,
+      address: body.address,
+      job: body.job,
+      bio: body.bio,
+      photo: body.photo,
+    })
+    .eq("idUser", idUser);
+
+  if (error) throw new Error(error.message);
+
+  // === Handle skills ===
+  const { data: oldSkills } = await supabase
+    .from("userSkill")
+    .select("idSkill")
+    .eq("idUser", idUser);
+
+  const oldSkillIds = oldSkills?.map((s) => s.idSkill) || [];
+  const newSkillIds = body.skillIds || [];
+
+  // Cari skill yang harus ditambah
+  const toInsert = newSkillIds.filter((s) => !oldSkillIds.includes(s));
+  if (toInsert.length > 0) {
+    await supabase.from("userSkill").insert(
+      toInsert.map((s) => ({
+        idUser,
+        idSkill: s,
+      }))
+    );
+  }
+
+  // Cari skill yang harus dihapus
+  const toDelete = oldSkillIds.filter((s) => !newSkillIds.includes(s));
+  if (toDelete.length > 0) {
+    await supabase
+      .from("userSkill")
+      .delete()
+      .eq("idUser", idUser)
+      .in("idSkill", toDelete);
+  }
+
+  return data;
+};
+
+
 
 // Delete user
 const deleteUser = async (idUser) => {
