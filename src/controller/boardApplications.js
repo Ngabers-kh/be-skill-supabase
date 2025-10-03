@@ -107,6 +107,48 @@ class BoardApplicationsController {
     }
   }
 
+  static async getMessageFreeLanceById(req, res) {
+    try {
+      const { id } = req.params; // pastikan route pakai :idUser
+      const message = await ApplicationModel.getMessageFreeLanceApplicationsById(id);
+      res.status(200).json(message);
+    } catch (err) {
+      console.error("Error getAllAplicationFreeLanceByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  static async updateApplicationFreeLance(req, res) {
+      try {
+        const { id } = req.params;
+        await ApplicationModel.updateApplicationFreeLance(req.body, id);
+        res.json({ message: "Board updated" });
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+    }
+
+  static async getMessageFreeLanceFromApllyByUserId(req, res) {
+    try {
+      const { idUser } = req.params; // pastikan route pakai :idUser
+      const message = await ApplicationModel.getAllMessagesFromApply(idUser);
+      res.status(200).json(message);
+    } catch (err) {
+      console.error("Error getAllAplicationFreeLanceByUser:", err);
+      res.status(500).json({ message: err.message });
+    }
+  }
+
+  static async getReplyById(req, res) {
+            try {
+              const { idReply} = req.params;
+              const reply = await ApplicationModel.getMessageFreeLanceFromById(idReply);
+              res.json(reply);
+            } catch (err) {
+              res.status(500).json({ message: err.message });
+            }
+      }
+
 }
 
 module.exports = BoardApplicationsController;

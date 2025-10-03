@@ -14,6 +14,7 @@ const getAllBoardsLearning = async () => {
       status,
       users(name)`)
     .eq("status", "open");
+    // .neq("idUserCreated", idUser);
 
   if (error) throw new Error(error.message);
 

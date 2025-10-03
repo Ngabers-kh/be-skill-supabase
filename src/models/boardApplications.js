@@ -203,13 +203,10 @@ const getMessageFreeLanceApplications = async (idUser) => {
       id,
       message,
       subject,
-      status,
       created_at,
       boardFreeLance (
         id,
-        title,
-        description,
-        users ( name )
+        title
       )
     `)
     .eq("idUserCreated", idUser);
@@ -220,12 +217,76 @@ const getMessageFreeLanceApplications = async (idUser) => {
     id: app.id,
     message: app.message,
     subject: app.subject,
-    status: app.status,
     created_at: app.created_at,
     boardTitle: app.boardFreeLance?.title || null,
-    boardDescription: app.boardFreeLance?.description || null,
-    organizer: app.boardFreeLance?.users?.name || null,
   }));
+};
+
+const getMessageFreeLanceApplicationsById = async (id) => {
+  const { data, error } = await supabase
+    .from("boardFreeLanceApplications")
+    .select(`
+      id,
+      message,
+      subject,
+      created_at,
+      status,
+      boardFreeLance (
+        id,
+        title
+      ),
+      idUser (
+        idUser,
+        name,
+        email
+      )
+    `)
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  return data.map((app) => ({
+    id: app.id,
+    message: app.message,
+    subject: app.subject,
+    created_at: app.created_at,
+    idUserCreated: app.idUserCreated,
+    status: app.status,
+    idBoardFreeLance: app.boardFreeLance?.id || null,
+    boardTitle: app.boardFreeLance?.title || null,
+    idUserTarget: app.idUser?.idUser|| null,
+    user: app.idUser?.name || null,
+    email: app.idUser?.email || null,
+  }));
+};
+
+const updateApplicationFreeLance = async (body, id) => {
+  // Update status aplikasi
+  const { data: updated, error: updateError } = await supabase
+    .from("boardFreeLanceApplications")
+    .update({ status: body.status })
+    .eq("id", id)
+    .select();
+
+  if (updateError) throw new Error(updateError.message);
+
+  // Insert ke tabel pesan (log/message)
+  const { data: newBoard, error: insertError } = await supabase
+    .from("freeLanceMessages")
+    .insert([
+      {
+        subject: body.subject,
+        status: body.status,
+        idUserTarget: body.idUserTarget,
+        idBoardFreeLance: body.idBoardFreeLance,
+        idUserCreated: body.idUserCreated,
+      },
+    ])
+    .select();
+
+  if (insertError) throw new Error(insertError.message);
+
+  return { updated, newBoard };
 };
 
 const getMessageLearningApplications = async (idUser) => {
@@ -233,14 +294,11 @@ const getMessageLearningApplications = async (idUser) => {
     .from("boardLearningApplications")
     .select(`
       id,
-      totalAmount,
-      paymentStatus,
       created_at,
       boardLearning (
         id,
         title,
         description,
-        link,
         users ( name )
       )
     `)
@@ -250,12 +308,9 @@ const getMessageLearningApplications = async (idUser) => {
 
   return data.map((app) => ({
     id: app.id,
-    totalAmount: app.totalAmount,
-    paymentStatus: app.paymentStatus,
     created_at: app.created_at,
     boardTitle: app.boardLearning?.title || null,
     boardDescription: app.boardLearning?.description || null,
-    link: app.boardLearning?.link || null,
     organizer: app.boardLearning?.users?.name || null,
   }));
 };
@@ -273,6 +328,9 @@ const getMessageLearningApplicationsbyId = async (id) => {
         title,
         description,
         link,
+        date,
+        startTime,
+        endTime,
         users ( name )
       )
     `)
@@ -288,9 +346,40 @@ const getMessageLearningApplicationsbyId = async (id) => {
     boardTitle: app.boardLearning?.title || null,
     boardDescription: app.boardLearning?.description || null,
     link: app.boardLearning?.link || null,
+    date: app.boardLearning?.date || null,
+    startTime: app.boardLearning?.startTime || null,
+    endTime: app.boardLearning?.endTime || null,
     organizer: app.boardLearning?.users?.name || null,
   }));
 };
+
+const getAllMessagesFromApply = async (idUser) => {
+    const { data, error } = await supabase.from('freeLanceMessages').select('*').eq('idUserTarget', idUser);
+    if (error) throw new Error(error.message);
+    return data;
+}
+
+const getMessageFreeLanceFromById = async (id) => {
+  const { data, error } = await supabase
+    .from("freeLanceMessages")
+    .select(
+      `
+      id,
+      subject,
+      status,
+      created_at,
+      idBoardFreeLance(title, description),
+      idUserTarget(name, email),
+      idUserCreated(name, email)
+    `
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
+};
+
 
 
 module.exports = {
@@ -302,5 +391,9 @@ module.exports = {
     getAllAplicationLearningByUserId,
     getMessageFreeLanceApplications,
     getMessageLearningApplications,
-    getMessageLearningApplicationsbyId
+    getMessageLearningApplicationsbyId,
+    getMessageFreeLanceApplicationsById,
+    updateApplicationFreeLance,
+    getAllMessagesFromApply,
+    getMessageFreeLanceFromById
 };

@@ -15,6 +15,10 @@ router.post('/freelance', BoardApplicationsController.createBoardApplicationFree
 router.post('/freelance/search', BoardApplicationsController.getIdUserBoardApplicationFreeLance);
 router.get('/freelance/:idUser', BoardApplicationsController.getAllAplicationFreeLanceByUser);
 router.get('/freelance/messages/:idUser', BoardApplicationsController.getAllMessageFreeLanceByUser);
+router.get('/freelance/message/:id', BoardApplicationsController.getMessageFreeLanceById);
+router.post('/freeLance/message/update/:id', BoardApplicationsController.updateApplicationFreeLance);
+router.get('/freelance/messages/reply/:idUser', BoardApplicationsController.getMessageFreeLanceFromApllyByUserId);
+router.get('/freelance/messages/detail/:idReply', BoardApplicationsController.getReplyById);
 
 
 module.exports = router;
