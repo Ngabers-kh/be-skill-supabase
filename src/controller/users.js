@@ -9,11 +9,24 @@ class UserController {
     try {
       const { name, email, password, address, job } = req.body;
       const user = await UserModel.createNewUser({ name, email, password, address, job });
-      res.json(user);
+
+      // bikin token langsung setelah register
+      const token = jwt.sign(
+        { id: user.idUser, email: user.email },
+        JWT_SECRET,
+        { expiresIn: "10m" }
+      );
+
+      res.json({
+        message: "Register success",
+        userId: user.idUser,
+        token: token,
+      });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   }
+
 
   // Login
   static async loginUser(req, res) {
