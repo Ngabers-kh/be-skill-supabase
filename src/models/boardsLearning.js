@@ -119,7 +119,8 @@ const getAllBoardsLearningByUser = async (idUser) => {
       startTime,
       endTime,
       status,
-      users(name)
+      users(name),
+      amount
     `)
     .eq("idUser", idUser);
 

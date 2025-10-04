@@ -5,19 +5,41 @@ const createBoardApplicationLearning = async (body) => {
   const { data, error } = await supabase
     .from("boardLearningApplications")
     .insert([
-        {
-            idBoardLearning: body.idBoardLearning,
-            idTransaction: body.idTransaction,
-            idUser: body.idUser,
-            totalAmount: body.totalAmount,
-            paymentStatus: "Success",
-        }
+      {
+        idBoardLearning: body.idBoardLearning,
+        idTransaction: body.idTransaction,
+        idUser: body.idUser,
+        totalAmount: body.totalAmount,
+        paymentStatus: "Success",
+      },
     ])
     .select();
 
-    if (error) throw new Error(error.message);
-    return data[0];
+  if (error) throw new Error(error.message);
+
+  // Ambil amount lama
+  const { data: boardData, error: fetchError } = await supabase
+    .from("boardLearning")
+    .select("amount")
+    .eq("id", body.idBoardLearning)
+    .single();
+
+  if (fetchError) throw new Error(fetchError.message);
+
+  // Tambah 1
+  const newAmount = (boardData?.amount || 0) + 1;
+
+  // Update amount
+  const { error: updateError } = await supabase
+    .from("boardLearning")
+    .update({ amount: newAmount })
+    .eq("id", body.idBoardLearning);
+
+  if (updateError) throw new Error(updateError.message);
+
+  return data[0];
 };
+
 
 // get idUser dan id BoardLearning
 const getIdUserIdBoardLearning = async (body) => {
