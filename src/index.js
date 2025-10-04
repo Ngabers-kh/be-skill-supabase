@@ -22,6 +22,29 @@ app.use(middlewareLogRequest);
 app.use(express.json());
 app.use('/assets', express.static('public/images'));
 
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Express App</title>
+        <style>
+          body { 
+            font-family: sans-serif; 
+            background: #f9f9f9; 
+            text-align: center; 
+            padding: 50px;
+          }
+          h1 { color: #333; }
+        </style>
+      </head>
+      <body>
+        <h1>Express API is Running</h1>
+      </body>
+    </html>
+  `);
+});
+
 // Routes
 app.use('/users', userRoutes);
 app.use('/skills', skillRoutes);
