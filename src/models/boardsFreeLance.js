@@ -158,7 +158,7 @@ const getBoardsFreeLanceById = async (idBoard) => {
       endDate,
       status,
       idUser,
-      users(name)
+      users(idUser, name)
     `)
     .eq("id", idBoard);
 
