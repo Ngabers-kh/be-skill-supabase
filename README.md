@@ -15,30 +15,6 @@ Proyek ini menggunakan **Express.js** sebagai backend framework dan terintegrasi
 - [Bcrypt](https://www.npmjs.com/package/bcrypt) 
 
 ---
-
-## Struktur Proyek
-
-```
-
-SkillLearn/
-│
-├── src/
-│   ├── config/
-│   │   └── db.js              # Koneksi ke Supabase
-│   ├── controllers/           # Logika utama tiap endpoint
-│   ├── models/                # Query & interaksi dengan database
-│   ├── routes/                # Routing API
-│   ├── middlewares/           # Middleware (auth, error handler, dll)
-│   └── app.js                 # Inisialisasi Express
-│
-├── .env                       # Konfigurasi environment
-├── package.json
-└── README.md
-
-````
-
----
-
 ## Instalasi & Konfigurasi
 
 ### Clone Repositori
