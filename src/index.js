@@ -52,22 +52,18 @@ app.use('/boardsLearning', boardLeraningRoutes);
 app.use('/boardsFreeLance', boardFreeLanceRoutes);
 app.use('/applications', BoardApplicationsRoutes);
 
-// Upload endpoint  
-
 app.post('/upload', upload.single('photo'), (req, res) => {
   res.json({
     message: 'Upload berhasil',
   });           
 });
 
-// Error handler
 app.use((err, req, res, next) => {
   res.status(500).json({
     message: err.message,
   });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server berhasil di running di port ${PORT}`);
 });

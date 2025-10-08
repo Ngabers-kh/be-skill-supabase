@@ -17,7 +17,6 @@ const getAllBoardsFreeLance = async () => {
 
   if (error) throw new Error(error.message);
 
-  // untuk setiap board, ambil skills
   for (const board of boards) {
     const { data: boardSkills, error: boardSkillsError } = await supabase
       .from("boardFreeLanceSkill")
@@ -36,7 +35,7 @@ const getAllBoardsFreeLance = async () => {
 
       if (skillsError) throw new Error(skillsError.message);
 
-      board.skills = skills.map((s) => s.nameSkill); // tambahin ke board
+      board.skills = skills.map((s) => s.nameSkill);
     } else {
       board.skills = [];
     }
@@ -84,8 +83,6 @@ const createNewBoard = async (body) => {
 
 // Delete Board
 const deleteBoardFreeLance = async (idBoardFreeLance) => {
-
-  // hapus skill yang terkait dulu
   const { error: skillError } = await supabase
     .from("boardFreeLanceSkill")
     .delete()
@@ -192,7 +189,6 @@ const updateBoardFreeLance = async (body, idBoardFreeLance) => {
 
   if (error) throw new Error(error.message);
 
-  // === Handle skills ===
   const { data: oldSkills } = await supabase
     .from("boardFreeLanceSkill")
     .select("idSkill")
@@ -201,7 +197,6 @@ const updateBoardFreeLance = async (body, idBoardFreeLance) => {
   const oldSkillIds = oldSkills.map(s => s.idSkill);
   const newSkillIds = body.skills;
 
-  // Cari skill yang harus ditambah
   const toInsert = newSkillIds.filter(s => !oldSkillIds.includes(s));
   if (toInsert.length > 0) {
     await supabase
@@ -212,7 +207,6 @@ const updateBoardFreeLance = async (body, idBoardFreeLance) => {
       })));
   }
 
-  // Cari skill yang harus dihapus
   const toDelete = oldSkillIds.filter(s => !newSkillIds.includes(s));
   if (toDelete.length > 0) {
     await supabase

@@ -10,7 +10,6 @@ class UserController {
       const { name, email, password, address, job } = req.body;
       const user = await UserModel.createNewUser({ name, email, password, address, job });
 
-      // bikin token langsung setelah register
       const token = jwt.sign(
         { id: user.idUser, email: user.email },
         JWT_SECRET,
@@ -34,26 +33,23 @@ class UserController {
         const { email, password } = req.body;
         const user = await UserModel.getUserByEmail(email);
 
-        // Memeriksa apakah pengguna ditemukan dan memverifikasi password
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // Membuat token JWT
         const token = jwt.sign(
             { id: user.idUser, email: user.email },
             JWT_SECRET,
-            { expiresIn: "10m" } // Token berlaku selama 10 menit
+            { expiresIn: "10m" } 
         );
 
-        // Mengembalikan respons yang berisi token dan informasi pengguna
         res.json({
             message: "Login success",
-            userId: user.idUser, // Pastikan ini sesuai dengan model pengguna
+            userId: user.idUser, 
             token: token,
         });
         } catch (err) {
-            console.error("Login error:", err); // Tambahkan logging untuk kesalahan
+            console.error("Login error:", err); 
             res.status(500).json({ message: "Internal server error" });
         }
     }
@@ -103,15 +99,15 @@ class UserController {
 
   // Tambah / update skills user
   static async addSkillsUser(req, res) {
-    console.log("Request received:", req.params, req.body); // Tambahkan ini
+    console.log("Request received:", req.params, req.body); 
     try {
         const { idUser } = req.params;
-        const { skills } = req.body; // array of skill_id
+        const { skills } = req.body; 
 
         const result = await UserModel.addSkillsToUser(idUser, skills);
         res.json({ message: "Skills updated"});
     } catch (err) {
-        console.error(err); // Tambahkan ini untuk melihat kesalahan
+        console.error(err); 
         res.status(500).json({ message: err.message });
     }
 }

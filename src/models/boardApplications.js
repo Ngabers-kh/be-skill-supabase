@@ -17,7 +17,6 @@ const createBoardApplicationLearning = async (body) => {
 
   if (error) throw new Error(error.message);
 
-  // Ambil amount lama
   const { data: boardData, error: fetchError } = await supabase
     .from("boardLearning")
     .select("amount")
@@ -26,10 +25,8 @@ const createBoardApplicationLearning = async (body) => {
 
   if (fetchError) throw new Error(fetchError.message);
 
-  // Tambah 1
   const newAmount = (boardData?.amount || 0) + 1;
 
-  // Update amount
   const { error: updateError } = await supabase
     .from("boardLearning")
     .update({ amount: newAmount })
@@ -57,7 +54,7 @@ const getIdUserIdBoardLearning = async (body) => {
     throw error;
   }
 
-  return data && data.length > 0; // true kalau ada, false kalau tidak
+  return data && data.length > 0; 
 };
 
 
@@ -97,7 +94,7 @@ const getIdUserIdBoardFreeLance = async (body) => {
     throw error;
   }
 
-  return data && data.length > 0; // true kalau ada, false kalau tidak
+  return data && data.length > 0;
 };
 
 // get all board apllication
@@ -126,7 +123,6 @@ const getAllAplicationFreeLanceByUserId = async (idUser) => {
 
   if (error) throw new Error(error.message);
 
-  // null check + tambah skills
   for (const app of applications) {
     if (!app.boardFreeLance) {
       app.boardFreeLance = { skills: [] };
@@ -185,7 +181,6 @@ const getAllAplicationLearningByUserId = async (idUser) => {
 
   if (error) throw new Error(error.message);
 
-  // null check + tambah skills
   for (const app of applications) {
     if (!app.boardLearning) {
       app.boardLearning = { skills: [] };
@@ -283,7 +278,6 @@ const getMessageFreeLanceApplicationsById = async (id) => {
 };
 
 const updateApplicationFreeLance = async (body, id) => {
-  // Update status aplikasi
   const { data: updated, error: updateError } = await supabase
     .from("boardFreeLanceApplications")
     .update({ status: body.status })
@@ -292,7 +286,6 @@ const updateApplicationFreeLance = async (body, id) => {
 
   if (updateError) throw new Error(updateError.message);
 
-  // Insert ke tabel pesan (log/message)
   const { data: newBoard, error: insertError } = await supabase
     .from("freeLanceMessages")
     .insert([
@@ -324,7 +317,7 @@ const getMessageLearningApplications = async (idUser) => {
         users ( name )
       )
     `)
-    .eq("idUser", idUser); // filter berdasarkan user yang apply
+    .eq("idUser", idUser);
 
   if (error) throw new Error(error.message);
 
@@ -356,7 +349,7 @@ const getMessageLearningApplicationsbyId = async (id) => {
         users ( name )
       )
     `)
-    .eq("id", id); // filter berdasarkan user yang apply
+    .eq("id", id);
 
   if (error) throw new Error(error.message);
 

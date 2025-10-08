@@ -17,7 +17,7 @@ class BoardApplicationsController {
             const alreadyExist = await ApplicationModel.getIdUserIdBoardLearning({ idBoardLearning, idUser });
 
             return res.json({
-                alreadyExist, // true kalau sudah ada, false kalau belum
+                alreadyExist,
             });
         } catch (err) {
             console.error("Error getIdUserBoardApplicationLearning:", err);
@@ -41,7 +41,7 @@ class BoardApplicationsController {
             const alreadyExist = await ApplicationModel.getIdUserIdBoardFreeLance({ idBoardFreeLance, idUser });
 
             return res.json({
-                alreadyExist, // true kalau sudah ada, false kalau belum
+                alreadyExist,
             });
         } catch (err) {
             console.error("Error getIdUserBoardApplicationFreeLance:", err);
@@ -64,7 +64,7 @@ class BoardApplicationsController {
 
   static async getAllAplicationLearningByUser(req, res) {
     try {
-      const { idUser } = req.params; // pastikan route pakai :idUser
+      const { idUser } = req.params; 
 
       const applications = await ApplicationModel.getAllAplicationLearningByUserId(idUser);
       res.status(200).json(applications);
@@ -76,7 +76,7 @@ class BoardApplicationsController {
 
   static async getAllMessageFreeLanceByUser(req, res) {
     try {
-      const { idUser } = req.params; // pastikan route pakai :idUser
+      const { idUser } = req.params; 
       const message = await ApplicationModel.getMessageFreeLanceApplications(idUser);
       res.status(200).json(message);
     } catch (err) {
@@ -87,7 +87,7 @@ class BoardApplicationsController {
 
   static async getAllMessageLearningByUser(req, res) {
     try {
-      const { idUser } = req.params; // pastikan route pakai :idUser
+      const { idUser } = req.params; 
       const message = await ApplicationModel.getMessageLearningApplications(idUser);
       res.status(200).json(message);
     } catch (err) {
@@ -98,7 +98,7 @@ class BoardApplicationsController {
 
   static async getMessageLearningById(req, res) {
     try {
-      const { id } = req.params; // pastikan route pakai :idUser
+      const { id } = req.params;
       const message = await ApplicationModel.getMessageLearningApplicationsbyId(id);
       res.status(200).json(message);
     } catch (err) {
@@ -109,7 +109,7 @@ class BoardApplicationsController {
 
   static async getMessageFreeLanceById(req, res) {
     try {
-      const { id } = req.params; // pastikan route pakai :idUser
+      const { id } = req.params; 
       const message = await ApplicationModel.getMessageFreeLanceApplicationsById(id);
       res.status(200).json(message);
     } catch (err) {
@@ -130,7 +130,7 @@ class BoardApplicationsController {
 
   static async getMessageFreeLanceFromApllyByUserId(req, res) {
     try {
-      const { idUser } = req.params; // pastikan route pakai :idUser
+      const { idUser } = req.params;
       const message = await ApplicationModel.getAllMessagesFromApply(idUser);
       res.status(200).json(message);
     } catch (err) {

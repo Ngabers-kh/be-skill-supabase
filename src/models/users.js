@@ -11,7 +11,6 @@ const bcrypt = require("bcrypt");
 const { get } = require('../routes/users');
 
 const createNewUser = async (body) => {
-    // Hash password dulu
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(body.password, salt);
 
@@ -24,21 +23,18 @@ const createNewUser = async (body) => {
                 address: body.address,
                 role: "user",
                 job: body.job,
-                password: hashedPassword, // simpan hash, bukan plain text
+                password: hashedPassword,
             },
         ])
-        .select(); // biar langsung return data user yg baru dibuat
+        .select(); 
 
     if (error) throw new Error(error.message);
 
-    return data[0]; // biasanya Supabase return array
+    return data[0];
 };
 
-
-// Update user
 // Update User + Skills
 const updateUser = async (body, idUser) => {
-  // === Update data user ===
   const { data, error } = await supabase
     .from("users")
     .update({
@@ -52,7 +48,6 @@ const updateUser = async (body, idUser) => {
 
   if (error) throw new Error(error.message);
 
-  // === Handle skills ===
   const { data: oldSkills } = await supabase
     .from("userSkill")
     .select("idSkill")
@@ -61,7 +56,6 @@ const updateUser = async (body, idUser) => {
   const oldSkillIds = oldSkills?.map((s) => s.idSkill) || [];
   const newSkillIds = body.skillIds || [];
 
-  // Cari skill yang harus ditambah
   const toInsert = newSkillIds.filter((s) => !oldSkillIds.includes(s));
   if (toInsert.length > 0) {
     await supabase.from("userSkill").insert(
@@ -72,7 +66,6 @@ const updateUser = async (body, idUser) => {
     );
   }
 
-  // Cari skill yang harus dihapus
   const toDelete = oldSkillIds.filter((s) => !newSkillIds.includes(s));
   if (toDelete.length > 0) {
     await supabase
@@ -84,8 +77,6 @@ const updateUser = async (body, idUser) => {
 
   return data;
 };
-
-
 
 // Delete user
 const deleteUser = async (idUser) => {
@@ -103,20 +94,18 @@ const getUserByEmail = async (email) => {
         .from('users')
         .select('*')
         .eq('email', email)
-        .single(); // Hanya ambil satu user
+        .single(); 
 
     if (error) {
-        // Menangani error dengan lebih baik
         console.error("Error fetching user:", error);
         throw new Error(error.message);
     }
 
-    // Memastikan data yang dikembalikan adalah objek yang valid
     if (!data) {
         throw new Error("User not found");
     }
 
-    return data; // Mengembalikan data user
+    return data; 
 };
 
 // Get user by id
@@ -125,20 +114,18 @@ const getUserById = async (id) => {
         .from('users')
         .select('*')
         .eq('idUser', id)
-        .single(); // Hanya ambil satu user
+        .single(); 
 
     if (error) {
-        // Menangani error dengan lebih baik
         console.error("Error fetching user:", error);
         throw new Error(error.message);
     }
 
-    // Memastikan data yang dikembalikan adalah objek yang valid
     if (!data) {
         throw new Error("User not found");
     }
 
-    return data; // Mengembalikan data user
+    return data; 
 };
 
 const addSkillsToUser = async (idUser, skillIds) => {
@@ -156,7 +143,6 @@ const addSkillsToUser = async (idUser, skillIds) => {
 
 // Get skills of a user
 const getSkillsOfUser = async (idUser) => {
-    // Ambil skill ID dari userSkill
     const { data: userSkills, error: userSkillsError } = await supabase
         .from('userSkill')
         .select('idSkill')
@@ -164,7 +150,6 @@ const getSkillsOfUser = async (idUser) => {
 
     if (userSkillsError) throw new Error(userSkillsError.message);
 
-    // Ambil nameSkill dari skills berdasarkan skill ID yang didapat
     const skillIds = userSkills.map(skill => skill.idSkill);
     const { data: skills, error: skillsError } = await supabase
         .from('skills')

@@ -14,11 +14,9 @@ const getAllBoardsLearning = async () => {
       status,
       users(name)`)
     .eq("status", "open");
-    // .neq("idUserCreated", idUser);
 
   if (error) throw new Error(error.message);
 
-  // untuk setiap board, ambil skills
   for (const board of boards) {
     const { data: boardSkills, error: boardSkillsError } = await supabase
       .from("boardLearningSkill")
@@ -37,15 +35,13 @@ const getAllBoardsLearning = async () => {
 
       if (skillsError) throw new Error(skillsError.message);
 
-      board.skills = skills.map((s) => s.nameSkill); // tambahin ke board
+      board.skills = skills.map((s) => s.nameSkill); 
     } else {
       board.skills = [];
     }
   }
-
   return boards;
 };
-
 
 // Create Board
 const createNewBoard = async (body) => {
@@ -88,7 +84,6 @@ const createNewBoard = async (body) => {
 
 // Delete Board
 const deleteBoardLearning = async (idBoardLearning) => {
-  // hapus skill yang terkait dulu
   const { error: skillError } = await supabase
     .from("boardLearningSkill")
     .delete()
@@ -96,7 +91,6 @@ const deleteBoardLearning = async (idBoardLearning) => {
 
   if (skillError) throw new Error(skillError.message);
 
-  // baru hapus board
   const { data, error } = await supabase
     .from("boardLearning")
     .delete()
@@ -199,7 +193,6 @@ const updateBoardLearning = async (body, idBoardLearning) => {
         .eq('id', idBoardLearning);
     if (error) throw new Error(error.message);
     
-  // === Handle skills ===
   const { data: oldSkills } = await supabase
     .from("boardLearningSkill")
     .select("idSkill")
@@ -208,7 +201,6 @@ const updateBoardLearning = async (body, idBoardLearning) => {
   const oldSkillIds = oldSkills.map(s => s.idSkill);
   const newSkillIds = body.skills;
 
-  // Cari skill yang harus ditambah
   const toInsert = newSkillIds.filter(s => !oldSkillIds.includes(s));
   if (toInsert.length > 0) {
     await supabase
@@ -219,7 +211,6 @@ const updateBoardLearning = async (body, idBoardLearning) => {
       })));
   }
 
-  // Cari skill yang harus dihapus
   const toDelete = oldSkillIds.filter(s => !newSkillIds.includes(s));
   if (toDelete.length > 0) {
     await supabase
